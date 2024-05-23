@@ -17,6 +17,8 @@ package org.tensorflow.lite.examples.transfer.api;
 
 import android.util.Log;
 import android.content.Context;
+import android.util.Pair;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,6 +34,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.ScatteringByteChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,6 +56,74 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * base model.
  */
 public final class TransferLearningModel implements Closeable {
+  public ByteBuffer[] getParameters()  {
+    return modelParameters;
+  }
+
+  public void updateParameters(ByteBuffer[] newParams){
+    parameterLock.writeLock().lock();
+    try {
+      modelParameters = newParams;
+    } finally {
+      parameterLock.writeLock().unlock();
+    }
+  }
+
+  public int getSize_Training() {
+    return trainingSamples.size();
+  }
+
+  public int getSize_Testing() {
+    return testingSamples.size();
+  }
+
+
+  private static class TestingSample {
+    ByteBuffer bottleneck;
+    String className;
+
+    TestingSample(ByteBuffer bottleneck, String className) {
+      this.bottleneck = bottleneck;
+      this.className = className;
+    }
+  }
+
+  private final List<TestingSample> testingSamples = new ArrayList<>();
+
+  public Pair<Float, Float> getTestStatistics() {
+    float[] confidences;
+    Prediction[] predictions = new Prediction[classes.size()];
+    parameterLock.readLock().lock();
+    float loss = 0.0f;
+    int correct = 0;
+    try {
+      for (int sampleIdx = 0; sampleIdx < testingSamples.size(); sampleIdx++) {
+        TestingSample sample = testingSamples.get(sampleIdx);
+        confidences = inferenceModel.runInference(sample.bottleneck, modelParameters);
+
+        for (int classIdx = 0; classIdx < classes.size(); classIdx++) {
+          predictions[classIdx] = new Prediction(classesByIdx[classIdx], confidences[classIdx]);
+        }
+        Arrays.sort(predictions, (a, b) -> -Float.compare(a.confidence, b.confidence));
+        if (predictions[0].className.equals(sample.className)) correct++;
+        loss += getLLLoss(predictions, sample.className);
+      }
+    } finally {
+      parameterLock.readLock().unlock();
+    }
+
+    Log.e("Accuracy", (float) correct/testingSamples.size() + "--" + loss / testingSamples.size() );
+    return Pair.create(loss/testingSamples.size(), (float) correct /testingSamples.size());
+  }
+
+  private float getLLLoss(Prediction[] predictions, String gt){
+    for (int i = 0; i < predictions.length; i++){
+      if (predictions[i].className.equals(gt)){
+        return (float) (-1.0 * Math.log(predictions[i].confidence));
+      }
+    }
+    return 0.0f;
+  }
 
   /**
    * Prediction for a single class produced by the model.

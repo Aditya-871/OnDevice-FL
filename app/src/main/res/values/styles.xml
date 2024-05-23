@@ -6,4 +6,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <attr format="reference" name="textAppearanceBodyLarge"/>
+    <style name="Widget.Material3.TextInputEditText.FilledBox" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
+<!--        <item name="android:textColor">@color/m3_textfield_input_text_color</item>-->
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

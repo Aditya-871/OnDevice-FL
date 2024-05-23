@@ -2,8 +2,15 @@
 <resources>
   <string name="app_name">Activity Recognition</string>
 
+  <string name="notification_channel_id">1002</string>
+  <string name="notification_title">Federated learning running</string>
+  <string name="cancel_download">Cancel federated learning</string>
+
   <string name="start_action">Start</string>
   <string name="stop_action">Stop</string>
+  <string name="inference_button">Get Inference</string>
+  <string name="prev_button">Go Back</string>
+  <string name="start_fl">Start Federated Learning</string>
 
   <string name="output_title">Output probabilities</string>
   <string name="data_collection_title">Select a class for data collection</string>
@@ -13,8 +20,8 @@
 
   <string name="logo_title">On-Device Activity Recognizer</string>
 
-<!--  'walking', 'standing', 'jogging', 'sitting', 'biking', 'upstairs',
-       'downstairs',-->
+  <!--  'walking', 'standing', 'jogging', 'sitting', 'biking', 'upstairs',
+   'downstairs',-->
 
   <string name="classA_class">Walking</string>
   <string name="classB_class">Standing</string>
@@ -28,10 +35,10 @@
     <string name="on_device_activity_recognition">On device activity recognition</string>
 
     <string-array name="options_array">
-    <item>Data Collection</item>
-    <item>Training</item>
-<!--    <item>Inference</item>-->
-  </string-array>
+      <item>Data Collection</item>
+      <item>Training</item>
+      <!--    <item>Inference</item>-->
+    </string-array>
 
   <string-array name="class_array">
     <item>Walking</item>
@@ -42,11 +49,11 @@
     <item>Upstairs</item>
     <item>Downstairs</item>
 
-<!--    <item>Class C</item>-->
-<!--    <item>Class D</item>-->
-<!--    <item>Class E</item>-->
-<!--    <item>Class F</item>-->
-<!--    <item>Class G</item>-->
+    <!--    <item>Class C</item>-->
+    <!--    <item>Class D</item>-->
+    <!--    <item>Class E</item>-->
+    <!--    <item>Class F</item>-->
+    <!--    <item>Class G</item>-->
   </string-array>
 
-  </resources>
+</resources>

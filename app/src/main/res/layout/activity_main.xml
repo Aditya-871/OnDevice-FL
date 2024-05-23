@@ -6,32 +6,30 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_fill"
     android:orientation="vertical"
-    android:paddingLeft="5dp"
-    android:paddingTop="10dp"
-    android:paddingRight="5dp"
-    android:paddingBottom="10dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     tools:context="org.tensorflow.lite.examples.transfer.MainActivity">
 
 
-<!--    <ImageView-->
-<!--        android:id="@+id/logoImageView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:layout_weight="0"-->
-<!--        app:srcCompat="@drawable/ic_logo"-->
-<!--        android:layout_marginBottom="10dp"/>-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/logoImageView"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="60dp"-->
+    <!--        android:layout_weight="0"-->
+    <!--        app:srcCompat="@drawable/ic_logo"-->
+    <!--        android:layout_marginBottom="10dp"/>-->
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_weight="0"
         android:gravity="center"
         android:text="@string/logo_title"
         android:textColor="@android:color/white"
         android:textSize="24sp"
-        app:fontFamily="@font/titillium_web"
-        android:layout_marginBottom="10dp"/>
+        app:fontFamily="@font/titillium_web" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -52,9 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:clickable="true"/>
+            android:clickable="true" />
     </androidx.cardview.widget.CardView>
-
 
 
     <androidx.cardview.widget.CardView
@@ -112,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:clickable="true"/>
+                        android:clickable="true" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
@@ -132,6 +129,7 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <TextView
                             android:id="@+id/classACountTitleTextView"
                             android:layout_width="wrap_content"
@@ -139,8 +137,8 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:text="@string/classA_class"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
 
                         <TextView
                             android:id="@+id/classACountValueTextView"
@@ -150,8 +148,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_value"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
                     </TableRow>
 
                     <TableRow
@@ -165,8 +163,8 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:text="@string/classB_class"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
 
                         <TextView
                             android:id="@+id/classBCountValueTextView"
@@ -176,8 +174,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_value"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
                     </TableRow>
 
                     <TableRow
@@ -191,8 +189,8 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:text="@string/classC_class"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
 
                         <TextView
                             android:id="@+id/classCCountValueTextView"
@@ -202,8 +200,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_value"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
                     </TableRow>
 
                     <TableRow
@@ -217,8 +215,8 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:text="@string/classD_class"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
 
                         <TextView
                             android:id="@+id/classDCountValueTextView"
@@ -228,8 +226,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_value"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
                     </TableRow>
 
                     <TableRow
@@ -243,8 +241,8 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:text="@string/classE_class"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
 
                         <TextView
                             android:id="@+id/classECountValueTextView"
@@ -254,8 +252,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_value"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
                     </TableRow>
 
                     <TableRow
@@ -269,8 +267,8 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:text="@string/classF_class"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
 
                         <TextView
                             android:id="@+id/classFCountValueTextView"
@@ -280,8 +278,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_value"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
                     </TableRow>
 
                     <TableRow
@@ -295,8 +293,8 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:text="@string/classG_class"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
 
                         <TextView
                             android:id="@+id/classGCountValueTextView"
@@ -306,8 +304,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_value"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
                     </TableRow>
 
                 </TableLayout>
@@ -347,25 +345,28 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="@string/training_stats_title"
-                    app:fontFamily="@font/titillium_web"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:fontFamily="@font/titillium_web" />
 
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
                         <TextView
                             android:id="@+id/lossTitleTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
-                            app:fontFamily="@font/titillium_web"
                             android:text="@string/loss_title"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
+
                         <TextView
                             android:id="@+id/lossValueTextView"
                             android:layout_width="wrap_content"
@@ -374,8 +375,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_value"
-                            app:fontFamily="@font/titillium_web"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            app:fontFamily="@font/titillium_web" />
                     </TableRow>
 
                 </TableLayout>
@@ -386,102 +387,102 @@
 
     </androidx.cardview.widget.CardView>
 
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="15dp"-->
-<!--        android:layout_weight="0"-->
-<!--        android:padding="5dp"-->
-<!--        app:cardBackgroundColor="@android:color/darker_gray"-->
-<!--        app:cardCornerRadius="4dp"-->
-<!--        app:cardElevation="10dp">-->
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginBottom="15dp"-->
+    <!--        android:layout_weight="0"-->
+    <!--        android:padding="5dp"-->
+    <!--        app:cardBackgroundColor="@android:color/darker_gray"-->
+    <!--        app:cardCornerRadius="4dp"-->
+    <!--        app:cardElevation="10dp">-->
 
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_margin="0.1dp"-->
-<!--            app:cardBackgroundColor="@color/colorPrimaryDark"-->
-<!--            app:cardCornerRadius="4dp">-->
+    <!--        <androidx.cardview.widget.CardView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_margin="0.1dp"-->
+    <!--            app:cardBackgroundColor="@color/colorPrimaryDark"-->
+    <!--            app:cardCornerRadius="4dp">-->
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="vertical"-->
-<!--                android:padding="5dp">-->
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="match_parent"-->
+    <!--                android:orientation="vertical"-->
+    <!--                android:padding="5dp">-->
 
-<!--                <TextView-->
-<!--                    android:id="@+id/dinfTextView"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="5dp"-->
-<!--                    android:text="@string/output_title"-->
-<!--                    app:fontFamily="@font/titillium_web"-->
-<!--                    android:textColor="@android:color/white"-->
-<!--                    android:textStyle="bold" />-->
+    <!--                <TextView-->
+    <!--                    android:id="@+id/dinfTextView"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_margin="5dp"-->
+    <!--                    android:text="@string/output_title"-->
+    <!--                    app:fontFamily="@font/titillium_web"-->
+    <!--                    android:textColor="@android:color/white"-->
+    <!--                    android:textStyle="bold" />-->
 
-<!--                <TableLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent">-->
+    <!--                <TableLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="match_parent">-->
 
-<!--                    <TableRow-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent">-->
+    <!--                    <TableRow-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="match_parent">-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/classAOutputTitleTextView"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_margin="5dp"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:text="@string/classA_class"-->
-<!--                            app:fontFamily="@font/titillium_web"-->
-<!--                            android:textColor="@android:color/white" />-->
+    <!--                        <TextView-->
+    <!--                            android:id="@+id/classAOutputTitleTextView"-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_margin="5dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:text="@string/classA_class"-->
+    <!--                            app:fontFamily="@font/titillium_web"-->
+    <!--                            android:textColor="@android:color/white" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/classAOutputValueTextView"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_margin="5dp"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:gravity="center"-->
-<!--                            android:text="@string/zero_value"-->
-<!--                            app:fontFamily="@font/titillium_web"-->
-<!--                            android:textColor="@android:color/white" />-->
-<!--                    </TableRow>-->
+    <!--                        <TextView-->
+    <!--                            android:id="@+id/classAOutputValueTextView"-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_margin="5dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:text="@string/zero_value"-->
+    <!--                            app:fontFamily="@font/titillium_web"-->
+    <!--                            android:textColor="@android:color/white" />-->
+    <!--                    </TableRow>-->
 
-<!--                    <TableRow-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent">-->
+    <!--                    <TableRow-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="match_parent">-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/classBOutputTitleTextView"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_margin="5dp"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:text="@string/classB_class"-->
-<!--                            app:fontFamily="@font/titillium_web"-->
-<!--                            android:textColor="@android:color/white" />-->
+    <!--                        <TextView-->
+    <!--                            android:id="@+id/classBOutputTitleTextView"-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_margin="5dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:text="@string/classB_class"-->
+    <!--                            app:fontFamily="@font/titillium_web"-->
+    <!--                            android:textColor="@android:color/white" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/classBOutputValueTextView"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_margin="5dp"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:gravity="center"-->
-<!--                            android:text="@string/zero_value"-->
-<!--                            app:fontFamily="@font/titillium_web"-->
-<!--                            android:textColor="@android:color/white" />-->
-<!--                    </TableRow>-->
+    <!--                        <TextView-->
+    <!--                            android:id="@+id/classBOutputValueTextView"-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_margin="5dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:text="@string/zero_value"-->
+    <!--                            app:fontFamily="@font/titillium_web"-->
+    <!--                            android:textColor="@android:color/white" />-->
+    <!--                    </TableRow>-->
 
-<!--                </TableLayout>-->
+    <!--                </TableLayout>-->
 
-<!--            </LinearLayout>-->
+    <!--            </LinearLayout>-->
 
-<!--        </androidx.cardview.widget.CardView>-->
+    <!--        </androidx.cardview.widget.CardView>-->
 
-<!--    </androidx.cardview.widget.CardView>-->
+    <!--    </androidx.cardview.widget.CardView>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -549,5 +550,33 @@
                 app:fontFamily="@font/titillium_web" />
         </androidx.cardview.widget.CardView>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/inferenceButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@color/buttonBackground"
+        android:drawableEnd="@android:drawable/ic_media_ff"
+        android:fontFamily="@font/titillium_web"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/inference_button"
+        android:textAlignment="center"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/startFL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@color/buttonBackground"
+        android:drawableEnd="@android:drawable/ic_media_ff"
+        android:fontFamily="@font/titillium_web"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/start_fl"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

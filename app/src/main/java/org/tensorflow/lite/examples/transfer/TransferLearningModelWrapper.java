@@ -18,6 +18,7 @@ package org.tensorflow.lite.examples.transfer;
 import android.content.Context;
 import android.os.ConditionVariable;
 import android.util.Log;
+import android.util.Pair;
 
 import java.io.Closeable;
 import java.io.File;
@@ -25,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.ScatteringByteChannel;
 import java.util.Arrays;
@@ -129,4 +131,36 @@ public class TransferLearningModelWrapper implements Closeable {
       e.printStackTrace();
     }
   }
+
+  public Pair<Float, Float> calculateTestStatistics(){
+    return model.getTestStatistics();
+  }
+
+  public ByteBuffer[] getParameters()  {
+    return model.getParameters();
+  }
+
+  public void updateParameters(ByteBuffer[] newParams) {
+    model.updateParameters(newParams);
+  }
+
+  public void train(int epochs){
+    new Thread(() -> {
+      shouldTrain.block();
+      try {
+        model.train(epochs, lossConsumer).get();
+      } catch (ExecutionException e) {
+        throw new RuntimeException("Exception occurred during model training", e.getCause());
+      } catch (InterruptedException e) {
+        // no-op
+      }
+    }).start();
+  }
+
+  public int getSize_Training() {
+    return model.getSize_Training();
+  }
+
+  public int getSize_Testing() { return model.getSize_Testing(); }
+
 }

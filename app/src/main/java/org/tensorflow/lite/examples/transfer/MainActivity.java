@@ -3,6 +3,7 @@ package org.tensorflow.lite.examples.transfer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -66,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
   Button startButton;
   Button stopButton;
 
+  Button inferenceButton;
+
+  Button startFlButton;
+
   TextView classATextView;
   TextView classBTextView;
   TextView classAInstanceCountTextView;
@@ -97,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     startButton = (Button) findViewById(R.id.buttonStart);
     stopButton = (Button) findViewById(R.id.buttonStop);
+    inferenceButton = (Button) findViewById(R.id.inferenceButton);
+    startFlButton = (Button)findViewById(R.id.startFL);
     stopButton.setEnabled(false);
 
 //    classATextView = (TextView)findViewById(R.id.classAOutputValueTextView);
@@ -243,6 +250,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
           Toast.makeText(getApplicationContext(), "Model saved.", Toast.LENGTH_SHORT).show();
         }
       }
+    });
+
+    inferenceButton.setOnClickListener( new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent intent = new Intent(view.getContext(), InferenceActivity.class);
+        view.getContext().startActivity(intent);}
+    });
+
+    startFlButton.setOnClickListener( new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent intent = new Intent(view.getContext(), FLActivity.class);
+        view.getContext().startActivity(intent);}
     });
 
   }
