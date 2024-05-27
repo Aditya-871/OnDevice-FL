@@ -71,6 +71,7 @@ dependencies {
     // If you want to use custom Keras models from TFLiteTransferConverter
     // Python API, uncomment the following Flex AAR dependency.
     implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:0.0.0-nightly'
+    implementation 'org.tensorflow:tensorflow-android:1.13.1'
 
     def lifecycle_version = '2.1.0-rc01'
 

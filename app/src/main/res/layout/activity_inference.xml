@@ -14,7 +14,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/cardBackground"
+            android:background="@drawable/gradient_fill"
             android:padding="10sp">
 
             <TableRow
@@ -22,7 +22,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/classACountTitleTextView"
+                    android:id="@+id/walkingInferenceTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -33,7 +33,7 @@
                     app:fontFamily="@font/titillium_web" />
 
                 <TextView
-                    android:id="@+id/classACountValueTextView"
+                    android:id="@+id/walkingInferenceValueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -50,7 +50,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/classBCountTitleTextView"
+                    android:id="@+id/standingInferenceTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -61,7 +61,7 @@
                     app:fontFamily="@font/titillium_web" />
 
                 <TextView
-                    android:id="@+id/classBCountValueTextView"
+                    android:id="@+id/standingInferenceValueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -78,7 +78,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/classCCountTitleTextView"
+                    android:id="@+id/joggingInferenceTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -89,7 +89,7 @@
                     app:fontFamily="@font/titillium_web" />
 
                 <TextView
-                    android:id="@+id/classCCountValueTextView"
+                    android:id="@+id/joggingInferenceValueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -106,7 +106,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/classDCountTitleTextView"
+                    android:id="@+id/sittingInferenceTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -117,7 +117,7 @@
                     app:fontFamily="@font/titillium_web" />
 
                 <TextView
-                    android:id="@+id/classDCountValueTextView"
+                    android:id="@+id/sittingInferenceValueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -134,7 +134,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/classECountTitleTextView"
+                    android:id="@+id/bikingInferenceTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -145,7 +145,7 @@
                     app:fontFamily="@font/titillium_web" />
 
                 <TextView
-                    android:id="@+id/classECountValueTextView"
+                    android:id="@+id/bikingInferenceValueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -162,7 +162,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/classFCountTitleTextView"
+                    android:id="@+id/upstairsInferenceTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -173,7 +173,7 @@
                     app:fontFamily="@font/titillium_web" />
 
                 <TextView
-                    android:id="@+id/classFCountValueTextView"
+                    android:id="@+id/upstairsInferenceValueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -190,7 +190,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/classGCountTitleTextView"
+                    android:id="@+id/downstairsInferenceTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -201,7 +201,7 @@
                     app:fontFamily="@font/titillium_web" />
 
                 <TextView
-                    android:id="@+id/classGCountValueTextView"
+                    android:id="@+id/downstairsInferenceValueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -225,8 +225,9 @@
             android:id="@+id/prevButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="0"
-            android:background="@color/buttonBackground"
+            android:background="@drawable/gradient_fill"
             android:drawableStart="@drawable/abc_vector_test"
             android:fontFamily="sans-serif-condensed"
             android:foreground="?android:attr/selectableItemBackground"

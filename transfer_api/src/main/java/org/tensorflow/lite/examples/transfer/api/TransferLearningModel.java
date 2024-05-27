@@ -444,6 +444,7 @@ public final class TransferLearningModel implements Closeable {
       }
       imageBuffer.rewind();
 
+      Log.w("TransferLearningModel","image length: "+image.length);
       ByteBuffer bottleneck = bottleneckModel.generateBottleneck(imageBuffer, inferenceBottleneck);
 
       float[] confidences;
