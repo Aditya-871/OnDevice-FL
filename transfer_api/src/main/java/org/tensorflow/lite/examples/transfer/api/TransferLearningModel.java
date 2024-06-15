@@ -370,12 +370,12 @@ public final class TransferLearningModel implements Closeable {
     Log.d("TAG", "Current time1: " + System.currentTimeMillis());
     //Log.i("training", "training started1");
 
-    if (trainingSamples.size() < getTrainBatchSize()) {
-      throw new RuntimeException(
-          String.format(
-              "Too few samples to start training: need %d, got %d",
-              getTrainBatchSize(), trainingSamples.size()));
-    }
+//    if (trainingSamples.size() < getTrainBatchSize()) {
+//      throw new RuntimeException(
+//          String.format(
+//              "Too few samples to start training: need %d, got %d",
+//              getTrainBatchSize(), trainingSamples.size()));
+//    }
 
     return executor.submit(
         () -> {

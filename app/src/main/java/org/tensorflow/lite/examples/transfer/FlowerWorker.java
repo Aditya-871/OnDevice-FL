@@ -29,9 +29,11 @@ import flwr.android_client.FlowerServiceGrpc;
 import  flwr.android_client.FlowerServiceGrpc.FlowerServiceStub;
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
@@ -60,7 +62,7 @@ public class FlowerWorker extends Worker {
     public Client fc;
     private StreamObserver<ClientMessage> UniversalRequestObserver;
     private static final String TAG = "Flower";
-    String serverIp = "00:00:00";
+    static String serverIp = "00:00:00";
     String serverPort = "0000";
     String dataslice = "1";
     public static String start_time;
@@ -384,7 +386,9 @@ public class FlowerWorker extends Worker {
                         end_time = sdf.format(currentDate);
                     }
                     Log.d("FIT-RESPONSE", "ABOUT TO SEND FIT RESPONSE");
-                    c = fitResAsProto(outputs.first, outputs.second);
+                    double bandwidth = estimateBandwidth();
+//                    c = fitResAsProto(outputs.first, outputs.second);
+                    c = fitResAsProto(outputs.first, outputs.second, bandwidth);
                 } else if (message.hasEvaluateIns()) {
                     Log.e(TAG, "Handling EvaluateIns");
 
@@ -437,7 +441,7 @@ public class FlowerWorker extends Worker {
         return ClientMessage.newBuilder().setGetParametersRes(res).build();
     }
 
-    private static ClientMessage fitResAsProto(ByteBuffer[] weights, int training_size){
+    private static ClientMessage fitResAsProto(ByteBuffer[] weights, int training_size, double bandwidth){
         List<ByteString> layers = new ArrayList<>();
         for (ByteBuffer weight : weights) {
             layers.add(ByteString.copyFrom(weight));
@@ -451,6 +455,7 @@ public class FlowerWorker extends Worker {
 
         metrics.put("start_time", Scalar.newBuilder().setString(start_time).build());
         metrics.put("end_time", Scalar.newBuilder().setString(end_time).build());
+        metrics.put("bandwidth", Scalar.newBuilder().setDouble(bandwidth).build());
         Parameters p = Parameters.newBuilder().addAllTensors(layers).setTensorType("ND").build();
         ClientMessage.FitRes res = ClientMessage.FitRes.newBuilder().setParameters(p).setNumExamples(training_size).putAllMetrics(metrics).build();
 //        ClientMessage.FitRes res = ClientMessage.FitRes.newBuilder().setParameters(p).setNumExamples(1).putAllMetrics(metrics).build();
@@ -486,7 +491,23 @@ public class FlowerWorker extends Worker {
         return ClientMessage.newBuilder().setEvaluateRes(res).build();
     }
 
-
+    // Function to estimate bandwidth using iperf3 (requires iperf3 to be installed)
+    public static double estimateBandwidth() throws IOException, InterruptedException {
+        Process process = Runtime.getRuntime().exec("iperf3 -c "+serverIp); // Replace with server IP
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        double bandwidth = 0.0;
+        while ((line = reader.readLine()) != null) {
+            if (line.contains("Sender")) {
+                String[] parts = line.split(" ");
+                bandwidth = Double.parseDouble(parts[6]); // Get bandwidth in Mbps
+                break;
+            }
+        }
+        process.waitFor();
+        reader.close();
+        return bandwidth;
+    }
 }
 
 
