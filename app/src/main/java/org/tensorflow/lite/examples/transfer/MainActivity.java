@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
           Log.w("data_collection_check", "data collection started");
           Log.w("data_collection_check", "data collection started");
           //Log.i("classid", classId);
-          tlModel.addSample(input, classId);
+//          tlModel.addSample(input, classId);
 
           if (classId.equals("Walking")) classAInstanceCount += 1;
           else if(classId.equals("Standing")) classBInstanceCount += 1;

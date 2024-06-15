@@ -158,12 +158,13 @@ public class FLActivity extends AppCompatActivity {
 
         // ensuring all inputs are entered :
 
-        EditText deviceIdEditText = findViewById(R.id.device_id_edit_text);
+//        EditText deviceIdEditText = findViewById(R.id.device_id_edit_text);
         EditText serverIPEditText = findViewById(R.id.serverIP);
         EditText serverPortEditText = findViewById(R.id.serverPort);
 
         // Get the text from the EditText widgets
-        String dataSlice = deviceIdEditText.getText().toString();
+//        String dataSlice = deviceIdEditText.getText().toString();
+        String dataSlice = "0";
         String serverIP = serverIPEditText.getText().toString();
         String serverPort = serverPortEditText.getText().toString();
 
@@ -181,7 +182,7 @@ public class FLActivity extends AppCompatActivity {
                     FlowerWorker.class, 15, TimeUnit.MINUTES)
                     .setInitialDelay(0, TimeUnit.MILLISECONDS)
                     .setInputData(new Data.Builder()
-                            .putString( "dataslice", deviceIdEditText.getText().toString() )
+                            .putString( "dataslice", "0") //deviceIdEditText.getText().toString()
                             .putString( "server", serverIPEditText.getText().toString())
                             .putString( "port" , serverPortEditText.getText().toString())
                             .build())

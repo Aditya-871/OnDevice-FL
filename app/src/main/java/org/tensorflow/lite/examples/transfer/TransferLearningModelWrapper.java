@@ -27,10 +27,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.ScatteringByteChannel;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.tensorflow.lite.examples.transfer.api.AssetModelLoader;
 import org.tensorflow.lite.examples.transfer.api.TransferLearningModel;
@@ -44,15 +47,30 @@ import org.tensorflow.lite.examples.transfer.api.TransferLearningModel.Predictio
  * run-once API of {@link TransferLearningModel}.
  */
 public class TransferLearningModelWrapper implements Closeable {
+  public static final int IMAGE_SIZE = 32;
+  private static final int FLOAT_BYTES = 4;
+  private static final int NUM_THREADS =
+          Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
   private final TransferLearningModel model;
-
+  private Context context;
   private final ConditionVariable shouldTrain = new ConditionVariable();
   private volatile LossConsumer lossConsumer;
+  private volatile boolean isTerminating = false;
+  private final ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
+
+
 
   TransferLearningModelWrapper(Context context) {
+//    model =
+//        new TransferLearningModel(
+//            new AssetModelLoader(context, "model"), Arrays.asList("Walking", "Standing", "Jogging", "Sitting", "Biking", "Upstairs", "Downstairs"));
     model =
-        new TransferLearningModel(
-            new AssetModelLoader(context, "model"), Arrays.asList("Walking", "Standing", "Jogging", "Sitting", "Biking", "Upstairs", "Downstairs"));
+            new TransferLearningModel(
+                    new AssetModelLoader(context, "model"),
+                    Arrays.asList("cat", "dog", "truck", "bird",
+                            "airplane", "ship", "frog", "horse", "deer",
+                            "automobile"));
+    this.context = context;
 
     new Thread(() -> {
       while (!Thread.interrupted()) {
@@ -73,6 +91,17 @@ public class TransferLearningModelWrapper implements Closeable {
   // This method is thread-safe.
   public Future<Void> addSample(float[] input, String className) {
     return model.addSample(input, className);
+  }
+  public Future<Void> addSample(float[] image, String className, Boolean isTraining) {
+    return model.addSample(image, className, isTraining);
+  }
+
+
+
+  private void checkNotTerminating() {
+    if (isTerminating) {
+      throw new IllegalStateException("Cannot operate on terminating model");
+    }
   }
 
   // This method is thread-safe, but blocking.
@@ -104,7 +133,7 @@ public class TransferLearningModelWrapper implements Closeable {
 
   /** Frees all model resources and shuts down all background threads. */
   public void close() {
-    model.close();
+    isTerminating = true; model.close();
   }
 
 
@@ -157,6 +186,11 @@ public class TransferLearningModelWrapper implements Closeable {
     }).start();
   }
 
+//  private static ByteBuffer allocateBuffer(int capacity) {
+//    ByteBuffer buffer = ByteBuffer.allocateDirect(capacity);
+//    buffer.order(ByteOrder.nativeOrder());
+//    return buffer;
+//  }
   public int getSize_Training() {
     return model.getSize_Training();
   }

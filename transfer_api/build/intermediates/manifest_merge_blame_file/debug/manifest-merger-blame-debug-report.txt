@@ -4,8 +4,8 @@
 4
 5    <uses-sdk
 6        android:minSdkVersion="21"
-6-->/Users/adityakumarsingh/Projects/BTP/Model and Android/OnDevice-FL/transfer_api/src/main/AndroidManifest.xml
+6-->/Users/adityakumarsingh/Downloads/OnDevice-FL/transfer_api/src/main/AndroidManifest.xml
 7        android:targetSdkVersion="29" />
-7-->/Users/adityakumarsingh/Projects/BTP/Model and Android/OnDevice-FL/transfer_api/src/main/AndroidManifest.xml
+7-->/Users/adityakumarsingh/Downloads/OnDevice-FL/transfer_api/src/main/AndroidManifest.xml
 8
 9</manifest>

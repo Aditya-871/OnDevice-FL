@@ -100,7 +100,8 @@ public class FlowerWorker extends Worker {
         Data checkData = getInputData();
         serverIp = checkData.getString("server");
         serverPort = checkData.getString("port");
-        dataslice = checkData.getString("dataslice");
+//        dataslice = checkData.getString("dataslice");
+        dataslice = "1";
 
         // Creating Foreground Notification Service about the Background Worker FL tasks
         setForegroundAsync(createForegroundInfo("Progress"));
@@ -110,7 +111,7 @@ public class FlowerWorker extends Worker {
             boolean resultConnect = connect();
             if(resultConnect)
             {
-//                loadData();
+                loadData();
                 CompletableFuture<Void> grpcFuture = runGrpc();
                 grpcFuture.get();
                 return Result.success();
@@ -156,20 +157,20 @@ public class FlowerWorker extends Worker {
         }
     }
 
-//    public void loadData() {
-//        try {
-//            fc.loadData(Integer.parseInt(dataslice));
-//            Log.d("LOAD", "Loading is complete");
-//            fc.writeStringToFile(getApplicationContext(), "FlowerResults.txt", "Loading Bit Images : Success" );
-//        } catch (Exception e) {
-//            StringWriter sw = new StringWriter();
-//            PrintWriter pw = new PrintWriter(sw);
-//            e.printStackTrace(pw);
-//            pw.flush();
-//            Log.d("LOAD_ERROR", "Error occured in Loading");
-//            fc.writeStringToFile(getApplicationContext(), "FlowerResults.txt", "Loading Bit Images : Failed" );
-//        }
-//    }
+    public void loadData() {
+        try {
+            fc.loadData(Integer.parseInt(dataslice));
+            Log.d("LOAD", "Loading is complete");
+            fc.writeStringToFile(getApplicationContext(), "FlowerResults.txt", "Loading Data : Success" );
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            pw.flush();
+            Log.d("LOAD_ERROR", "Error occured in Loading");
+            fc.writeStringToFile(getApplicationContext(), "FlowerResults.txt", "Loading Data : Failed" );
+        }
+    }
 
     public CompletableFuture<Void> runGrpc() {
 
@@ -452,6 +453,8 @@ public class FlowerWorker extends Worker {
         metrics.put("end_time", Scalar.newBuilder().setString(end_time).build());
         Parameters p = Parameters.newBuilder().addAllTensors(layers).setTensorType("ND").build();
         ClientMessage.FitRes res = ClientMessage.FitRes.newBuilder().setParameters(p).setNumExamples(training_size).putAllMetrics(metrics).build();
+//        ClientMessage.FitRes res = ClientMessage.FitRes.newBuilder().setParameters(p).setNumExamples(1).putAllMetrics(metrics).build();
+
         return ClientMessage.newBuilder().setFitRes(res).build();
     }
 
@@ -478,6 +481,8 @@ public class FlowerWorker extends Worker {
 
 
         ClientMessage.EvaluateRes res = ClientMessage.EvaluateRes.newBuilder().setLoss(loss).setNumExamples(testing_size).putAllMetrics(metrics).build();
+//        ClientMessage.EvaluateRes res = ClientMessage.EvaluateRes.newBuilder().setLoss(loss).setNumExamples(1).putAllMetrics(metrics).build();
+
         return ClientMessage.newBuilder().setEvaluateRes(res).build();
     }
 

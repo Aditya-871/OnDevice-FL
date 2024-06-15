@@ -323,6 +323,40 @@ public final class TransferLearningModel implements Closeable {
     });
   }
 
+  public Future<Void> addSample(float[] image, String className, Boolean isTraining) {
+    checkNotTerminating();
+
+//    if (!classes.containsKey(className)) {
+//      throw new IllegalArgumentException(String.format(
+//              "Class \"%s\" is not one of the classes recognized by the model", className));
+//    }
+
+    return executor.submit(() -> {
+      ByteBuffer imageBuffer = allocateBuffer(image.length * FLOAT_BYTES);
+      for (float f : image) {
+        imageBuffer.putFloat(f);
+      }
+      imageBuffer.rewind();
+
+      if (Thread.interrupted()) {
+        return null;
+      }
+      ByteBuffer bottleneck = bottleneckModel.generateBottleneck(imageBuffer, null);
+
+      trainingLock.lockInterruptibly();
+      try {
+        if (isTraining)
+          trainingSamples.add(new TransferLearningModel.TrainingSample(bottleneck, className));
+        else
+          testingSamples.add(new TransferLearningModel.TestingSample(bottleneck, className));
+      } finally {
+        trainingLock.unlock();
+      }
+
+      return null;
+    });
+  }
+
   /**
    * Trains the model on the previously added data samples.
    *

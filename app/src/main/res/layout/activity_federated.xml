@@ -8,19 +8,19 @@
 
     <!-- Device ID EditText -->
 
-    <EditText
-        android:id="@+id/device_id_edit_text"
-        style="@style/Widget.Material3.TextInputEditText.FilledBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:hint="Client ID (1-10)"
-        android:inputType="numberDecimal"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#4a5663"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <EditText-->
+<!--        android:id="@+id/device_id_edit_text"-->
+<!--        style="@style/Widget.Material3.TextInputEditText.FilledBox"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="8dp"-->
+<!--        android:hint="Client ID (1-10)"-->
+<!--        android:inputType="numberDecimal"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+<!--        android:textColor="#4a5663"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <!-- FL Server IP EditText -->
     <EditText
@@ -35,7 +35,7 @@
         android:textColor="#4a5663"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/device_id_edit_text" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- FL Server Port EditText -->
     <EditText
