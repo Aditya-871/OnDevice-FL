@@ -58,21 +58,20 @@ import io.grpc.stub.StreamObserver;
 
 public class FlowerWorker extends Worker {
 
-    private ManagedChannel channel;
-    public Client fc;
-    private StreamObserver<ClientMessage> UniversalRequestObserver;
-    private static final String TAG = "Flower";
-    static String serverIp = "00:00:00";
-    String serverPort = "0000";
-    String dataslice = "1";
-    public static String start_time;
-    public static String end_time;
+    private ManagedChannel channel;                                     // used to handle the notifications for our application
+    public Client fc;                                                   // an instance of client class to perform all functions of a federated learning client
+    private StreamObserver<ClientMessage> UniversalRequestObserver;     // stores the stream of client messages during federated learning
+    private static final String TAG = "Flower";                         // represents the tag used while logging messages
+    static String serverIp = "00:00:00";                                // represent the federated learning server IP
+    String serverPort = "0000";                                         // represents the port number of running federated learning server
+    String dataslice = "1";                                             // represents the slice of dataset to use while model training
+    public static String start_time;                                    // represents the start time for model training
+    public static String end_time;                                      // represents the end time for model training
     // following variables are just to send the worker routine to the
-    public static String workerStartTime = "";
+    public static String workerStartTime = "";                          // represents the time when the worker starts
+    public static String workerEndTime = "";                            // represents the time when the worker ends
+    public static String workerEndReason = "worker ended";              // represents the reason for worker to end
 
-    public static String workerEndTime = "";
-
-    public static String workerEndReason = "worker ended";
 
     public String getTime() {
         // Extract hours, minutes, and seconds
@@ -83,10 +82,9 @@ public class FlowerWorker extends Worker {
         }
         return "";
     }
-    private NotificationManager notificationManager;
-
     private static String PROGRESS = "PROGRESS";
 
+    // constructor for the class
     public FlowerWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         FlowerWorker worker = this;
@@ -95,6 +93,7 @@ public class FlowerWorker extends Worker {
         fc = new Client(context.getApplicationContext());
     }
 
+    // defines the tasks to be performed continuously in background by worker class
     @NonNull
     @Override
     public Result doWork() {
@@ -143,6 +142,7 @@ public class FlowerWorker extends Worker {
         }
     }
 
+    // function to make TCP/IP connection between server and client with help of given IP and port number
     public boolean connect() {
         int port = Integer.parseInt(serverPort);
         try {
@@ -159,6 +159,7 @@ public class FlowerWorker extends Worker {
         }
     }
 
+    // function to load data before model training
     public void loadData() {
         try {
             fc.loadData(Integer.parseInt(dataslice));
@@ -174,6 +175,7 @@ public class FlowerWorker extends Worker {
         }
     }
 
+    // function to start gRPC communication set up for federated learning
     public CompletableFuture<Void> runGrpc() {
 
         CompletableFuture<Void> future = new CompletableFuture<>();
@@ -208,7 +210,7 @@ public class FlowerWorker extends Worker {
         return future;
     }
 
-
+    // function to handle notification for the application when fl starts
     @NonNull
     private ForegroundInfo createForegroundInfo(@NonNull String progress) {
         // Building a notification using bytesRead and contentLength
@@ -235,6 +237,7 @@ public class FlowerWorker extends Worker {
         return new ForegroundInfo(notificationId, notification);
     }
 
+    // function to create channel for notifying about running federated learning on android devices
     @RequiresApi(Build.VERSION_CODES.O)
     private void createChannel() {
         Context context = getApplicationContext();
@@ -250,7 +253,7 @@ public class FlowerWorker extends Worker {
         notificationManager.createNotificationChannel(channel);
     }
 
-
+    // function to provide the update messages of federated learning process
     public class ProgressUpdater {
         public void setProgress() {
             // Aim of this class is to allow static FlowerServiceRunnable Object to notifiy Main Activity about the changes in real time to be displayed to User
@@ -260,12 +263,14 @@ public class FlowerWorker extends Worker {
         }
     }
 
+    // defines remote procedure call on client side to start federated learning
     private static class FlowerServiceRunnable{
         protected Throwable failed;
         public void run(FlowerServiceStub asyncStub, FlowerWorker worker ,  CountDownLatch latch , ProgressUpdater progressUpdater , Context context) {
             join(asyncStub, worker , latch , progressUpdater , context);
         }
 
+        // function to write a given string in a given file
         public void writeStringToFile( Context context , String fileName, String content) {
             try {
                 // Getting the app-specific external storage directory
@@ -296,6 +301,7 @@ public class FlowerWorker extends Worker {
             }
         }
 
+        // defines the remote procedure call to start federated learning
         private void join(FlowerServiceStub asyncStub, FlowerWorker worker, CountDownLatch latch , ProgressUpdater progressUpdater , Context context)
                 throws RuntimeException {
             final CountDownLatch finishLatch = new CountDownLatch(1);
@@ -335,6 +341,7 @@ public class FlowerWorker extends Worker {
             }
         }
 
+        // function to handle client message during federated learning
         private void handleMessage(ServerMessage message, FlowerWorker worker , ProgressUpdater progressUpdater , Context context) {
 
             try {
@@ -431,6 +438,7 @@ public class FlowerWorker extends Worker {
         }
     }
 
+    // function to write client message in response to server's get weights request
     private static ClientMessage weightsAsProto(ByteBuffer[] weights){
         List<ByteString> layers = new ArrayList<>();
         for (ByteBuffer weight : weights) {
@@ -441,6 +449,7 @@ public class FlowerWorker extends Worker {
         return ClientMessage.newBuilder().setGetParametersRes(res).build();
     }
 
+    // function to write client message in response to server's fit in request to start model training
     private static ClientMessage fitResAsProto(ByteBuffer[] weights, int training_size, double bandwidth){
         List<ByteString> layers = new ArrayList<>();
         for (ByteBuffer weight : weights) {
@@ -463,8 +472,7 @@ public class FlowerWorker extends Worker {
         return ClientMessage.newBuilder().setFitRes(res).build();
     }
 
-
-
+    // function to write client message in response to server's evaluated model request
     private static ClientMessage evaluateResAsProto(float loss, float accuracy ,int testing_size){
 
         // attempting to send accuracy to the server :
