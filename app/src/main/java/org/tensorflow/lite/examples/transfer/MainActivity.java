@@ -33,65 +33,52 @@ enum Mode {
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener  {
 
-  final int NUM_SAMPLES = 400;
+  final int NUM_SAMPLES = 100;  // number of data points in a window
   String MODEL_NAME = "ar_model";
-  double VB_THRESHOLD = 0.75;
-  public boolean a=false, b=false;
+//  double VB_THRESHOLD = 0.75;
+  public boolean a=false;
 
-  int classAInstanceCount = 0;
-  int classBInstanceCount = 0;
-  int classCInstanceCount = 0;
-  int classDInstanceCount = 0;
-  int classEInstanceCount = 0;
-  int classFInstanceCount = 0;
-  int classGInstanceCount = 0;
+  int classAInstanceCount = 0;  // number of windows collected for class A i.e. 'Walking'
+  int classBInstanceCount = 0;  // number of windows collected for class B i.e. 'Standing'
+  int classCInstanceCount = 0;  // number of windows collected for class C i.e. 'Jogging'
+  int classDInstanceCount = 0;  // number of windows collected for class D i.e. 'Sitting'
+  int classEInstanceCount = 0;  // number of windows collected for class E i.e. 'Biking'
+  int classFInstanceCount = 0;  // number of windows collected for class F i.e. 'Upstairs'
+  int classGInstanceCount = 0;  // number of windows collected for class G i.e. 'Downstairs'
+  boolean isRunning = false;    // flag to tell whether data collection is on-going or not
 
-  boolean isRunning = false;
-
-  SensorManager mSensorManager;
-  Sensor mAccelerometer;
-  Sensor mGyroscope;
-  TransferLearningModelWrapper tlModel;
+  SensorManager mSensorManager;         // sensor manager to handle and register all required sensors
+  Sensor mAccelerometer;                // accelerometer sensor
+  Sensor mGyroscope;                    // gyroscope sensor
+  TransferLearningModelWrapper tlModel; // wrapper object to perform training
   String classId;
-  static List<Float> x_accel;
-  static List<Float> y_accel;
-  static List<Float> z_accel;
-  static List<Float> x_gyro;
-  static List<Float> y_gyro;
-  static List<Float> z_gyro;
+  static List<Float> x_accel;           // stores the x component of accelerometer reading in order of their timestamp
+  static List<Float> y_accel;           // stores the y component of accelerometer reading in order of their timestamp
+  static List<Float> z_accel;           // stores the z component of accelerometer reading in order of their timestamp
+  static List<Float> x_gyro;            // stores the x component of gyroscope reading in order of their timestamp
+  static List<Float> y_gyro;            // stores the y component of gyroscope reading in order of their timestamp
+  static List<Float> z_gyro;            // stores the z component of gyroscope reading in order of their timestamp
+  static List<Float> input_signal;      // stores the reading of all sensors consecutively for data processing and training
 
-  static List<Float> input_signal;
+  Mode mode;        // defines the mode in which app is being used
 
-  Mode mode;
+  Button startButton;           // button to start data collection
+  Button stopButton;            // button to stop data collection
+  Button inferenceButton;       // button to navigate inference activity
+  Button startFlButton;         // button to navigate federated learning activity
 
-  Button startButton;
-  Button stopButton;
+  TextView classAInstanceCountTextView;       // textview to show the number of windows collected for class A i.e. 'Walking'
+  TextView classBInstanceCountTextView;       // textview to show the number of windows collected for class B i.e. 'Standing'
+  TextView classCInstanceCountTextView;       // textview to show the number of windows collected for class C i.e. 'Jogging'
+  TextView classDInstanceCountTextView;       // textview to show the number of windows collected for class D i.e. 'Sitting'
+  TextView classEInstanceCountTextView;       // textview to show the number of windows collected for class E i.e. 'Biking'
+  TextView classFInstanceCountTextView;       // textview to show the number of windows collected for class F i.e. 'Upstairs'
+  TextView classGInstanceCountTextView;       // textview to show the number of windows collected for class G i.e. 'Downstairs'
 
-  Button inferenceButton;
-
-  Button startFlButton;
-
-  TextView classATextView;
-  TextView classBTextView;
-  TextView classAInstanceCountTextView;
-  TextView classBInstanceCountTextView;
-  TextView classCTextView;
-  TextView classCInstanceCountTextView;
-  TextView classDTextView;
-  TextView classDInstanceCountTextView;
-  TextView classETextView;
-  TextView classEInstanceCountTextView;
-  TextView classFTextView;
-  TextView classFInstanceCountTextView;
-  TextView classGTextView;
-  TextView classGInstanceCountTextView;
-
-  TextView lossValueTextView;
-  Spinner optionSpinner;
-  Spinner classSpinner;
-  Vibrator vibrator;
-
-  private ServerConnection serverConnection;
+  TextView lossValueTextView;       // textview to show the loss value of model training
+  Spinner optionSpinner;            // spinner object to generate dropdown menu to select mode
+  Spinner classSpinner;             // spinner object to generate dropdown menu to select class for data collection
+  Vibrator vibrator;                // vibrator to alarm at beginning of the activity
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -100,15 +87,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+    // link buttons with their corresponding resources in main activity
     startButton = (Button) findViewById(R.id.buttonStart);
     stopButton = (Button) findViewById(R.id.buttonStop);
     inferenceButton = (Button) findViewById(R.id.inferenceButton);
     startFlButton = (Button)findViewById(R.id.startFL);
     stopButton.setEnabled(false);
 
-//    classATextView = (TextView)findViewById(R.id.classAOutputValueTextView);
-//    classBTextView = (TextView)findViewById(R.id.classBOutputValueTextView);
-
+    // link the textview resources in main activity of app with their corresponding variable
     classAInstanceCountTextView = (TextView)findViewById(R.id.classACountValueTextView);
     classBInstanceCountTextView = (TextView)findViewById(R.id.classBCountValueTextView);
     classCInstanceCountTextView = (TextView)findViewById(R.id.classCCountValueTextView);
@@ -119,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     lossValueTextView = (TextView)findViewById(R.id.lossValueTextView);
 
+    // link spinners to their corresponding resources
     optionSpinner = (Spinner) findViewById(R.id.optionSpinner);
     classSpinner = (Spinner) findViewById(R.id.classSpinner);
 
@@ -136,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     classSpinner.setAdapter(classAdapter);
 
+    // allocate memory to list of sensor readings and other arrays
     x_accel = new ArrayList<Float>();
     y_accel = new ArrayList<Float>();
     z_accel = new ArrayList<Float>();
@@ -144,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     z_gyro = new ArrayList<Float>();
     input_signal = new ArrayList<Float>();
 
+    // create instances of required sensor
     mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
@@ -163,14 +152,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     {
       Log.w("myApp", "accel is not available");
     }
-//    System.out.println(classATextView.getText().toString());
-//    System.out.println(classBTextView.getText().toString());
 
-
+    // register sensors listener to start reading sensor values
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
     mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
+
+    // create an instance of transfer learning model wrapper
     tlModel = new TransferLearningModelWrapper(getApplicationContext());
 
+    // set the spinner to select mode of data collection or training
     optionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view,
@@ -197,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
       }
     });
 
+    // set the spinner to select class for data collection
     classSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view,
@@ -210,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
       }
     });
 
+    // set on click listener for start button
     startButton.setOnClickListener( new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -221,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
       }
     });
 
+    // set on click listener for stop button
     stopButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -237,21 +230,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
           System.out.println(modelFile);
-          // Connect to server
-//          ServerConnection serverConnection = new ServerConnection();
-//          Log.i("sockettttttttt1", "connecting to server");
-//          serverConnection.connectToServer();
-
-          // Send data to server
-          //Log.i("sockettttttttt2", "sending to server");
-            //serverConnection.sendData("hii");
-
-
           Toast.makeText(getApplicationContext(), "Model saved.", Toast.LENGTH_SHORT).show();
         }
       }
     });
 
+    // set on click listener for inference button
     inferenceButton.setOnClickListener( new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -259,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         view.getContext().startActivity(intent);}
     });
 
+    // set on click listener for federated learning button
     startFlButton.setOnClickListener( new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -268,17 +253,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
   }
 
+  // function defines what to do when activity pauses
   protected void onPause() {
     super.onPause();
     mSensorManager.unregisterListener(this);
   }
 
+  // function defines what to do when activity is resumed
   protected void onResume() {
     super.onResume();
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
     mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_FASTEST);
   }
 
+  // function defines what to do when activity is destroyed
   protected void onDestroy() {
     super.onDestroy();
     tlModel.close();
@@ -286,23 +274,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     mSensorManager = null;
   }
 
-//  SensorManager mSensorManager;
-//  Sensor mAccelerometer;
-//  Sensor mGyroscope;
-
-
-
+  // defines the tasks to perform when value of any sensor reading changes
   @Override
   public void onSensorChanged(SensorEvent event) {
     switch (event.sensor.getType()) {
       case Sensor.TYPE_ACCELEROMETER:
       { x_accel.add(event.values[0]); y_accel.add(event.values[1]); z_accel.add(event.values[2]);
-        //Log.w("myapp2", "change in accel");
       }
         break;
       case Sensor.TYPE_GYROSCOPE:
       {x_gyro.add(event.values[0]); y_gyro.add(event.values[1]); z_gyro.add(event.values[2]);
-        //Log.w("myapp3", "change in gyro");
       }
         break;
     }
@@ -324,9 +305,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
   }
 
+  // function to process input i.e. arrays of sensor readings
   private void processInput()
   {
       int i = 0;
+      // create a window with NUM_SAMPLES data points
       while (i < NUM_SAMPLES) {
         input_signal.add(x_accel.get(i));
         input_signal.add(y_accel.get(i));
@@ -371,6 +354,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
           //Log.i("classid", classId);
 //          tlModel.addSample(input, classId);
 
+          // update the instance count for selected class
           if (classId.equals("Walking")) classAInstanceCount += 1;
           else if(classId.equals("Standing")) classBInstanceCount += 1;
           else if(classId.equals("Jogging")) classCInstanceCount += 1;
@@ -379,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
           else if(classId.equals("Upstairs")) classFInstanceCount += 1;
           else if(classId.equals("Downstairs")) classGInstanceCount += 1;
 
+          // display the instance count in textview of activity
           classAInstanceCountTextView.setText(Integer.toString(classAInstanceCount));
           classBInstanceCountTextView.setText(Integer.toString(classBInstanceCount));
           classCInstanceCountTextView.setText(Integer.toString(classCInstanceCount));
@@ -397,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
       input_signal.clear();
   }
 
+  // auxiliary function to type cast list of 'Float' to array of 'float'
   private float[] toFloatArray(List<Float> list)
   {
     int i = 0;
@@ -408,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     return array;
   }
 
+  // auxiliary function to round up a floating value
   private static float round(float d, int decimalPlace) {
     BigDecimal bd = new BigDecimal(Float.toString(d));
     bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);

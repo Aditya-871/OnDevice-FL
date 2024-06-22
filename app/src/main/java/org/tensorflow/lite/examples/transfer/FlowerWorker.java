@@ -150,11 +150,11 @@ public class FlowerWorker extends Worker {
                     .maxInboundMessageSize(10 * 1024 * 1024)
                     .usePlaintext()
                     .build();
-            fc.writeStringToFile(getApplicationContext(), "FlowerResults.txt" , "Connection : Successful with " + serverIp + " : " + serverPort + " : " + dataslice);
+            fc.writeStringToFile(getApplicationContext(), "FlowerResults.txt" , "Connection : Successful with " + serverIp + " : " + serverPort);
             return true; // connection is successful
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect to the server: " + e.getMessage(), e);
-            fc.writeStringToFile(getApplicationContext(), "FlowerResults.txt" , "Connection : Failed with " + serverIp + " : " + serverPort + " : " + dataslice);
+            fc.writeStringToFile(getApplicationContext(), "FlowerResults.txt" , "Connection : Failed with " + serverIp + " : " + serverPort);
             return false; // connection failed
         }
     }

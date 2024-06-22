@@ -34,14 +34,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+// activity to setup and start federated learning
 public class FLActivity extends AppCompatActivity {
 
-    private static final String TAG = "Flower";
-    private static final int REQUEST_WRITE_PERMISSION = 786;
-    private Button batteryOptimisationButton;
+    private static final String TAG = "Flower";                     // represents the TAG used while logging messages
+    private static final int REQUEST_WRITE_PERMISSION = 786;        // used to request write permission on android device
+    private  Button prevbutton;                                     // represent the button to navigate to main activity
+    MessageAdapter messageAdapter;                                  // represent an instance of message adapter class which handles the update messages from federated learning steps
 
-    private  Button prevbutton;
-    MessageAdapter messageAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,14 +67,7 @@ public class FLActivity extends AppCompatActivity {
                 }
             }
         });
-        // code for functionality of permission buttons :
-//        batteryOptimisationButton = findViewById(R.id.battery_optimisation);
-//        batteryOptimisationButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                toggleBatteryOptimization();
-//            }
-//        });
+
 
         prevbutton = (Button) findViewById(R.id.prevButton);
         prevbutton.setOnClickListener( new View.OnClickListener() {
@@ -85,6 +78,7 @@ public class FLActivity extends AppCompatActivity {
         });
     }
 
+    // function to request all required permissions
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
@@ -95,6 +89,8 @@ public class FLActivity extends AppCompatActivity {
             createEmptyFile("FlowerResults.txt");
         }
     }
+
+    // function to read a file, returns a list of strings in the file
     private List<String> readStringFromFile(Context context, String fileName) {
         List<String> lines = new ArrayList<>();
 
@@ -126,7 +122,7 @@ public class FLActivity extends AppCompatActivity {
         return lines;
     }
 
-
+    // function to clear a file
     private void clearFileContents(Context context, String fileName) {
         try {
             File directory = context.getExternalFilesDir(null);
@@ -152,18 +148,16 @@ public class FLActivity extends AppCompatActivity {
         }
     }
 
-
-
+    // function to start the worker defined in flower worker class, it performs all the federated learning tasks in background and continuously keeps giving updates about the process
     public void startWorker(View view) {
 
         // ensuring all inputs are entered :
-
-//        EditText deviceIdEditText = findViewById(R.id.device_id_edit_text);
+        // EditText deviceIdEditText = findViewById(R.id.device_id_edit_text);
         EditText serverIPEditText = findViewById(R.id.serverIP);
         EditText serverPortEditText = findViewById(R.id.serverPort);
 
         // Get the text from the EditText widgets
-//        String dataSlice = deviceIdEditText.getText().toString();
+        // String dataSlice = deviceIdEditText.getText().toString();
         String dataSlice = "0";
         String serverIP = serverIPEditText.getText().toString();
         String serverPort = serverPortEditText.getText().toString();
@@ -209,20 +203,18 @@ public class FLActivity extends AppCompatActivity {
 
 
     // Another Listener function to refresh the updates :
-
     public void refresh(View view)
     {
         refreshRecyclerView();
     }
 
     // Another Listener to clear the contents of the File :
-
     public void clear(View view)
     {
         clearFileContents(getApplicationContext() , "FlowerResults.txt");
     }
 
-
+    // function to refresh the status messages for federated learning
     private void refreshRecyclerView() {
         // Get messages from MessageRepository using the getMessagesArray method
         List<String> messages = readStringFromFile( getApplicationContext() ,"FlowerResults.txt");
@@ -235,43 +227,7 @@ public class FLActivity extends AppCompatActivity {
 
     }
 
-
-
-    // following code is for just the permissions :
-//    private void toggleBatteryOptimization() {
-//        if (isBatteryOptimizationEnabled()) {
-//            disableBatteryOptimization();
-//        } else {
-//            requestBatteryOptimization();
-//        }
-//    }
-
-    private boolean isBatteryOptimizationEnabled() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            String packageName = getPackageName();
-            PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            return powerManager.isIgnoringBatteryOptimizations(packageName);
-        }
-        // Battery optimization is not available on versions prior to M, so return false.
-        return false;
-    }
-
-    private void disableBatteryOptimization() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-            startActivity(intent);
-        }
-    }
-
-    private void requestBatteryOptimization() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            intent.setData(Uri.parse("package:" + getPackageName()));
-            startActivity(intent);
-//            startActivityForResult(intent, BATTERY_OPTIMIZATION_REQUEST_CODE);
-        }
-    }
-
+    // function to create an empty file, required to log update messages of federated learning
     public void createEmptyFile(String fileName) {
         try {
             File file = new File(fileName);

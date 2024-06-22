@@ -17,25 +17,29 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 
+// this class represents a client in a federated learning system and it implements all necessary functions for federated learning
 public class Client {
 
-    private TransferLearningModelWrapper tlModel;
-    private static final int LOWER_BYTE_MASK = 0xFF;
-    private MutableLiveData<Float> lastLoss = new MutableLiveData<>();
-    private Context context;
-    private final ConditionVariable isTraining = new ConditionVariable();
-    private static String TAG = "Flower";
-    private int local_epochs = 1;
+    private TransferLearningModelWrapper tlModel;                           // a transfer learning model wrapper instance to process requests related to transfer learning
+    private static final int LOWER_BYTE_MASK = 0xFF;                        // used for pre-processing the data before training
+    private MutableLiveData<Float> lastLoss = new MutableLiveData<>();      // stores the last loss value of model training
+    private Context context;                                                // provides a reference to the environment in which the application is currently running
+    private final ConditionVariable isTraining = new ConditionVariable();   // flag to tell whether model training is on-going or not
+    private static String TAG = "Flower";                                   // TAG used while logging messages
+    private int local_epochs = 1;                                           // represents the number of epochs for training in federated learning
 
+    // constructor for the class
     public Client(Context context) {
         this.tlModel = new TransferLearningModelWrapper(context);
         this.context = context;
     }
 
+    // function to get model weights for federated learning
     public ByteBuffer[] getWeights() {
         return tlModel.getParameters();
     }
 
+    // function to train the on device model
     public Pair<ByteBuffer[], Integer> fit(ByteBuffer[] weights, int epochs) {
 
         this.local_epochs = epochs;
@@ -48,12 +52,14 @@ public class Client {
         return Pair.create(getWeights(), tlModel.getSize_Training());
     }
 
+    // function to evaluate the received global model against local data
     public Pair<Pair<Float, Float>, Integer> evaluate(ByteBuffer[] weights) {
         tlModel.updateParameters(weights);
         tlModel.disableTraining();
         return Pair.create(tlModel.calculateTestStatistics(), tlModel.getSize_Testing());
     }
 
+    // function to set training loss value
     public void setLastLoss(int epoch, float newLoss) {
         if (epoch == this.local_epochs - 1) {
             Log.e(TAG, "Training finished after epoch = " + epoch);
@@ -63,6 +69,7 @@ public class Client {
         }
     }
 
+    // function to load data from device memory before on device training starts
     public void loadData(int device_id) {
         try {
             Log.d("FLOWERCLIENT_LOAD", "loadData: ");
@@ -90,6 +97,7 @@ public class Client {
         }
     }
 
+    // function to add sample for model training
     private void addSample(String photoPath, Boolean isTraining) throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -141,7 +149,6 @@ public class Client {
     }
 
     // function to write to a file :
-
     public void writeStringToFile( Context context , String fileName, String content) {
         try {
             // Get the app-specific external storage directory
@@ -171,6 +178,4 @@ public class Client {
             e.printStackTrace(); // Handle the exception as needed
         }
     }
-
-
 }

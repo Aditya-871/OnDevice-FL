@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+// defines the class to handle update messages during federated learning process
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
+    // list of messages
     private List<String> messages;
 
     // Constructor to initialize the data source

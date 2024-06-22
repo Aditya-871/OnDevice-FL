@@ -40,36 +40,32 @@ import org.tensorflow.lite.examples.transfer.api.TransferLearningModel;
 import org.tensorflow.lite.examples.transfer.api.TransferLearningModel.LossConsumer;
 import org.tensorflow.lite.examples.transfer.api.TransferLearningModel.Prediction;
 
-/**
- * App-layer wrapper for {@link TransferLearningModel}.
- *
- * <p>This wrapper allows to run training continuously, using start/stop API, in contrast to
- * run-once API of {@link TransferLearningModel}.
- */
+
+// App-layer wrapper for {TransferLearningModel}.
+// This wrapper allows to run training continuously, using start/stop API, in contrast to
+// run-once API of {TransferLearningModel}.
 public class TransferLearningModelWrapper implements Closeable {
-  public static final int IMAGE_SIZE = 32;
-  private static final int FLOAT_BYTES = 4;
+  public static final int IMAGE_SIZE = 32;                                              // size of the input data
   private static final int NUM_THREADS =
-          Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-  private final TransferLearningModel model;
-  private Context context;
-  private final ConditionVariable shouldTrain = new ConditionVariable();
-  private volatile LossConsumer lossConsumer;
-  private volatile boolean isTerminating = false;
-  private final ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
+          Math.max(1, Runtime.getRuntime().availableProcessors() - 1);                  // number of threads to run the transfer learning
+  private final TransferLearningModel model;                                            // an instance of transfer learning model defined in transfer api
+  private Context context;                                                              // provides a reference to the environment in which your application is currently running
+  private final ConditionVariable shouldTrain = new ConditionVariable();                // conditional variable to start training
+  private volatile LossConsumer lossConsumer;                                           // loss consumer for the model training
+  private volatile boolean isTerminating = false;                                       // flag to tell whether model training is terminating
+  private final ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);   // interface to simplify asynchronous task execution
 
-
-
+  // constructor for the class
   TransferLearningModelWrapper(Context context) {
-//    model =
-//        new TransferLearningModel(
-//            new AssetModelLoader(context, "model"), Arrays.asList("Walking", "Standing", "Jogging", "Sitting", "Biking", "Upstairs", "Downstairs"));
     model =
-            new TransferLearningModel(
-                    new AssetModelLoader(context, "model"),
-                    Arrays.asList("cat", "dog", "truck", "bird",
-                            "airplane", "ship", "frog", "horse", "deer",
-                            "automobile"));
+        new TransferLearningModel(
+            new AssetModelLoader(context, "model"), Arrays.asList("Walking", "Standing", "Jogging", "Sitting", "Biking", "Upstairs", "Downstairs"));
+//    model =
+//            new TransferLearningModel(
+//                    new AssetModelLoader(context, "model"),
+//                    Arrays.asList("cat", "dog", "truck", "bird",
+//                            "airplane", "ship", "frog", "horse", "deer",
+//                            "automobile"));
     this.context = context;
 
     new Thread(() -> {
@@ -96,8 +92,6 @@ public class TransferLearningModelWrapper implements Closeable {
     return model.addSample(image, className, isTraining);
   }
 
-
-
   private void checkNotTerminating() {
     if (isTerminating) {
       throw new IllegalStateException("Cannot operate on terminating model");
@@ -109,34 +103,30 @@ public class TransferLearningModelWrapper implements Closeable {
     return model.predict(input);
   }
 
+  // function to get training batch size
   public int getTrainBatchSize() {
     return model.getTrainBatchSize();
   }
 
-  /**
-   * Start training the model continuously until {@link #disableTraining() disableTraining} is
-   * called.
-   *
-   * @param lossConsumer callback that the loss values will be passed to.
-   */
+   // Start training the model continuously until {@link #disableTraining() disableTraining} is
+   // called.
+   // @param lossConsumer callback that the loss values will be passed to.
   public void enableTraining(LossConsumer lossConsumer) {
     this.lossConsumer = lossConsumer;
     shouldTrain.open();
   }
 
-  /**
-   * Stops training the model.
-   */
+   // Stops training the model.
   public void disableTraining() {
     shouldTrain.close();
   }
 
-  /** Frees all model resources and shuts down all background threads. */
+  // Frees all model resources and shuts down all background threads.
   public void close() {
     isTerminating = true; model.close();
   }
 
-
+  // function to save the model
   public void saveModel(File file){
     try {
       FileOutputStream out = new FileOutputStream(file);
@@ -149,6 +139,7 @@ public class TransferLearningModelWrapper implements Closeable {
     }
   }
 
+  // function to load the model file
   public void loadModel(File file){
     try {
       FileInputStream inp = new FileInputStream(file);
@@ -161,18 +152,22 @@ public class TransferLearningModelWrapper implements Closeable {
     }
   }
 
+  // function used to evaluate the model
   public Pair<Float, Float> calculateTestStatistics(){
     return model.getTestStatistics();
   }
 
+  // function to get model parameter
   public ByteBuffer[] getParameters()  {
     return model.getParameters();
   }
 
+  // function to update model parameters
   public void updateParameters(ByteBuffer[] newParams) {
     model.updateParameters(newParams);
   }
 
+  // function to start training
   public void train(int epochs){
     new Thread(() -> {
       shouldTrain.block();
@@ -186,15 +181,11 @@ public class TransferLearningModelWrapper implements Closeable {
     }).start();
   }
 
-//  private static ByteBuffer allocateBuffer(int capacity) {
-//    ByteBuffer buffer = ByteBuffer.allocateDirect(capacity);
-//    buffer.order(ByteOrder.nativeOrder());
-//    return buffer;
-//  }
+  // function to retrieve size of training dataset
   public int getSize_Training() {
     return model.getSize_Training();
   }
 
+  // function to retrieve size of testing dataset
   public int getSize_Testing() { return model.getSize_Testing(); }
-
 }
